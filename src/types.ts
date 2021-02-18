@@ -5,7 +5,7 @@
 // Configuration Data --------------------------------------------------------
 
 // Description of a single migration file
-// (fullname is relative to migrations directory)
+// (filename is relative to migrations directory)
 export interface MigrationData {
     executed: boolean;              // true === executed, false === pending
     filename: string;               // Filename with prefix timestamp and ".ts" suffix

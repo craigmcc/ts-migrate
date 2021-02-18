@@ -19,7 +19,6 @@ class SettingsCommand extends AbstractCommand {
     public execute = async (): Promise<void> => {
         const configurationData = this.configuration;
         console.info(JSON.stringify(configurationData.settings, null, 2));
-        this.configuration = configurationData;
     }
 
 }

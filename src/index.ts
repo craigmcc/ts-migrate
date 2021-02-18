@@ -16,7 +16,6 @@ export {
 // External Modules ----------------------------------------------------------
 
 require("ts-node/register");
-import fs = require("fs");
 const path = require("path");
 const packagePath = path.resolve(".");
 require("custom-env").env(packagePath);
@@ -31,7 +30,11 @@ const CONNECTION_URI = process.env.TS_MIGRATE_CONNECTION_URI
     ? process.env.TS_MIGRATE_CONNECTION_URI
     : "UNKNOWN";
 import connection from "@craigmcc/ts-database-postgres";
+import ExecutedCommand from "./commands/ExecutedCommand";
+import MigrationsCommand from "./commands/MigrationsCommand";
+import PendingCommand from "./commands/PendingCommand";
 import SettingsCommand from "./commands/SettingsCommand";
+import TemplatesCommand from "./commands/TemplatesCommand";
 const db = connection(CONNECTION_URI);
 
 // Command Line Processor ----------------------------------------------------
@@ -41,11 +44,25 @@ const { hideBin } = require("yargs/helpers");
 
 yargs(hideBin(process.argv))
     .command({
+        command: "executed",
+        describe: "Report already executed migrations",
+        handler: async (argv: any) => {
+            await (new ExecutedCommand()).execute();
+        }
+    })
+    .command({
         command: "migrations <directory>",
         describe: "Set project-relative directory for migrations",
         handler: async (argv: any) => {
-            console.info(`TODO: migrations ${argv.directory}`);
+            await (new MigrationsCommand(argv)).execute();
         },
+    })
+    .command({
+        command: "pending",
+        describe: "Report not yet executed migrations",
+        handler: async (argv: any) => {
+            await (new PendingCommand()).execute();
+        }
     })
     .command({
         command: "settings",
@@ -58,7 +75,7 @@ yargs(hideBin(process.argv))
         command: "templates <directory>",
         describe: "Set project-relative directory for templates",
         handler: async (argv: any) => {
-            console.info(`TODO: templates ${argv.directory}`);
+            await (new TemplatesCommand(argv)).execute();
         },
     })
     .demandCommand()
