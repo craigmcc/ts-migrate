@@ -2,3 +2,5 @@ dist
 .env*
 .idea
 node_modules
+# src/dev contains test migrations and templates, not part of actual project sources
+src/dev
