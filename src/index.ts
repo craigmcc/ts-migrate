@@ -7,6 +7,7 @@
 
 export {
     ConfigurationData,
+    Migration,
     MigrationData,
     SettingsData,
 } from "./types";
