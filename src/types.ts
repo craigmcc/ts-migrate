@@ -9,7 +9,7 @@
 // Description of a single migration file
 // (filename is relative to migrations directory)
 
-import {Connection} from "@craigmcc/ts-database";
+import { Connection } from "@craigmcc/ts-database";
 
 export interface MigrationData {
     executed: boolean;              // true === executed, false === pending
@@ -36,14 +36,13 @@ export interface ConfigurationData {
  */
 export abstract class Migration {
 
-
     /**
      * Gracefully undo the modifications made by the corresponding up() method.
      *
      * @param data      Read-only copy of the descriptive data for this migration
      * @param context   Database connection to use for our modifications
      */
-    public abstract down(data: MigrationData, context: Connection): Promise<void>;
+    abstract down(data: MigrationData, context: Connection): Promise<void>;
 
     /**
      * Modify the database (or other persistent state information) as required.
@@ -51,6 +50,6 @@ export abstract class Migration {
      * @param data      Read-only copy of the descriptive data for this migration
      * @param context   Database connection to use for our modifications
      */
-    public abstract up(data: MigrationData, context: Connection): Promise<void>;
+    abstract up(data: MigrationData, context: Connection): Promise<void>;
 
 }

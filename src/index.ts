@@ -22,30 +22,30 @@ const packageJson = require(path.resolve(packagePath, "package.json"));
 require("custom-env").env(packagePath);
 export const configstore = new Configstore(`${packageJson.name}/ts-migrate`);
 
-// Database Connection Environment -------------------------------------------
-
-// TODO - Figure out how we can await so we can use connection from ts-database,
-// TODO - and do the connect() call so migrations do not have to.
-const CONNECTION_URI = process.env.TS_MIGRATE_CONNECTION_URI
-    ? process.env.TS_MIGRATE_CONNECTION_URI
-    : "UNKNOWN";
-import connection from "@craigmcc/ts-database-postgres";
-const db = connection(CONNECTION_URI);
-
 // Command Line Processor ----------------------------------------------------
 
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 
+import CheckCommand from "./commands/CheckCommand";
 import CreateCommand from "./commands/CreateCommand";
 import DeleteCommand from "./commands/DeleteCommand";
+import DownCommand from "./commands/DownCommand";
 import ExecutedCommand from "./commands/ExecutedCommand";
 import MigrationsCommand from "./commands/MigrationsCommand";
 import PendingCommand from "./commands/PendingCommand";
 import SettingsCommand from "./commands/SettingsCommand";
 import TemplatesCommand from "./commands/TemplatesCommand";
+import UpCommand from "./commands/UpCommand";
 
 yargs(hideBin(process.argv))
+    .command({
+        command: "check <name>",
+        describe: "Check whether the specified migration can be successfully compiled",
+        handler: async (argv: any) => {
+            await (new CheckCommand(argv)).execute();
+        }
+    })
     .command({
         command: "create <name>",
         describe: "Create a new migration with the specified name (must include extension)",
@@ -58,6 +58,13 @@ yargs(hideBin(process.argv))
         describe: "Delete an existing migration that has not been executed",
         handler: async (argv: any) => {
             await (new DeleteCommand(argv)).execute();
+        }
+    })
+    .command({
+        command: "down <name>",
+        describe: "Execute down() on executed migrations down to, and including, the specified one",
+        handler: async (argv: any) => {
+            await (new DownCommand(argv)).execute();
         }
     })
     .command({
@@ -95,9 +102,15 @@ yargs(hideBin(process.argv))
             await (new TemplatesCommand(argv)).execute();
         },
     })
+    .command({
+        command: "up <name>",
+        describe: "Execute up() on pending migrations up to, and including, the specified one",
+        handler: async (argv: any) => {
+            await (new UpCommand(argv)).execute();
+        }
+    })
     .demandCommand()
     .option("template", {
-//        default: "ts-database",
         describe: "Template (for create command)",
         type: "string",
     })
