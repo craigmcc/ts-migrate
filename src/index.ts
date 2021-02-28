@@ -20,7 +20,16 @@ const path = require("path");
 const packagePath = path.resolve(".");
 const packageJson = require(path.resolve(packagePath, "package.json"));
 require("custom-env").env(packagePath);
-export const configstore = new Configstore(`${packageJson.name}/ts-migrate`);
+//export const configstore = new Configstore(`${packageJson.name}/ts-migrate`);
+export const configstore = new Configstore("ts-migrate", {
+    settings: {
+        migrationsPath: "./src/migrations",
+        templatesPath: "./src/templates"
+    },
+    migrations: [],
+}, {
+    configPath: path.resolve(".", "ts-migrate.json")
+});
 
 // Command Line Processor ----------------------------------------------------
 
@@ -48,7 +57,7 @@ yargs(hideBin(process.argv))
     })
     .command({
         command: "create <name>",
-        describe: "Create a new migration with the specified name (must include extension)",
+        describe: "Create a new migration with the specified name",
         handler: async (argv: any) => {
             await (new CreateCommand(argv)).execute();
         }

@@ -44,7 +44,7 @@ abstract class AbstractMigrationCommand extends AbstractCommand {
      * create the templates directory, presuming it will already exist.
      *
      * @param settingsData          Configuration settings
-     * @param template              Name of the requested template
+     * @param template              Name of the requested template (with extension)
      *
      * @returns requested template text
      */
@@ -71,9 +71,10 @@ abstract class AbstractMigrationCommand extends AbstractCommand {
      *
      * @param settingsData          Configuration settings data
      * @param name                  Migration name to convert
+     * @param extension             Extension to append
      */
-    protected toFilename(settingsData: SettingsData, name: string): string {
-        return `${timestamps.nowDateTime()}-${name}`;
+    protected toFilename(settingsData: SettingsData, name: string, extension: string): string {
+        return `${timestamps.nowDateTime()}-${name}${extension}`;
     }
 
     /**
@@ -92,20 +93,23 @@ abstract class AbstractMigrationCommand extends AbstractCommand {
      *
      * @param settingsData          Configuration settings data
      * @param name                  Name of this migration
+     * @param extension             Extension (with ".") to append
      * @param text                  Text of this migration
      *
      * @returns MigrationData for the newly created migration
      */
     protected writeMigration
-        (settingsData: SettingsData, name: string, text: string): MigrationData
+        (settingsData: SettingsData, name: string,
+         extension: string, text: string): MigrationData
     {
         this.createDirectory(settingsData.migrationsPath);
         const migrationData: MigrationData = {
             executed: false,
-            filename: this.toFilename(settingsData, name),
+            filename: this.toFilename(settingsData, name, extension),
             name: name
         }
         const pathname = this.toPathname(settingsData, migrationData.filename);
+        console.info(`Writing migration '${pathname}'`);
         fs.writeFileSync(pathname, text, { encoding: "utf8" });
         return migrationData;
     }

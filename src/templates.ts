@@ -6,35 +6,40 @@
 
 // Template Constants --------------------------------------------------------
 
-// Javascript
-export const JS_TEMPLATE = (name: string): string => {
+// Javascript - Class Based Template
+export const JS_CLASS_TEMPLATE = (name: string): string => {
     const className = toClassName(name);
     return [
-        "import { Connection } from \"@craigmcc/ts-database\";",
-        "import { Migration, MigrationData } from \"@craigmcc/ts-migrate\";",
-        "",
-        `class ${className} extends Migration {`,
-        "",
-        "    constructor() {",
-        "        super();",
-        "    }",
+        `class ${className} {`,
         "",
         "    async down(data, context) {",
-        `        throw new Error("${className}.down() not yet implemented");`,
+        `        console.info("${className}.down() not yet implemented");`,
         "    }",
         "",
         "    async up(data, context) {",
-        `        throw new Error("${className}.up() not yet implemented");`,
+        `        console.info("${className}.up() not yet implemented");`,
         "    }",
         "",
         "}",
-        "",
-        `export default ${className};`,
     ].join("\n") + "\n";
 }
 
-// Typescript
-export const TS_TEMPLATE = (name: string): string => {
+// Javascript - Object Based Template
+export const JS_OBJECT_TEMPLATE = (name: string): string => {
+    const objectName = toClassName(name);
+    return [
+        "exports.down = async (data, context) => {",
+        `        console.info("${objectName}.down() not yet implemented");`,
+        "    }",
+        "",
+        "exports.up = async (data, context) => {",
+        `        console.info("${objectName}.up() not yet implemented");`,
+        "    }",
+    ].join("\n") + "\n";
+}
+
+// Typescript - Class Based Template
+export const TS_CLASS_TEMPLATE = (name: string): string => {
     const className = toClassName(name);
     return [
         "import { Connection } from \"@craigmcc/ts-database\";",
@@ -47,16 +52,33 @@ export const TS_TEMPLATE = (name: string): string => {
         "    }",
         "",
         "    public async down(data: MigrationData, context: Connection): Promise<void> {",
-        `        throw new Error("${className}.down() not yet implemented");`,
+        `        console.info("${className}.down() not yet implemented");`,
         "    }",
         "",
         "    public async up(data: MigrationData, context: Connection): Promise<void> {",
-        `        throw new Error("${className}.up() not yet implemented");`,
+        `        console.info("${className}.up() not yet implemented");`,
         "    }",
         "",
         "}",
         "",
         `export default ${className};`,
+    ].join("\n") + "\n";
+}
+
+// Typescript - Object Based Template
+export const TS_OBJECT_TEMPLATE = (name: string): string => {
+    const objectName = toClassName(name);
+    return [
+        "import { Connection } from \"@craigmcc/ts-database\";",
+        "import { MigrationData } from \"@craigmcc/ts-migrate\";",
+        "",
+        "exports.down = async (data: MigrationData, context: Connection): Promise<void> => {",
+        `        console.info("${objectName}.down() not yet implemented");`,
+        "    }",
+        "",
+        "exports.up = async (data: MigrationData, context: Connection): Promise<void> => {",
+        `        console.info("${objectName}.up() not yet implemented");`,
+        "    }",
     ].join("\n") + "\n";
 }
 
