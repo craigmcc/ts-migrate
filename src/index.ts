@@ -14,7 +14,7 @@ export {
 
 // External Modules ----------------------------------------------------------
 
-require("ts-node/register");
+//require("ts-node/register");
 import Configstore from "configstore";
 const path = require("path");
 const packagePath = path.resolve(".");
