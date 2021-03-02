@@ -15,12 +15,10 @@ export {
 // External Modules ----------------------------------------------------------
 
 //require("ts-node/register");
-import Configstore from "configstore";
+require("custom-env").env(true);
 const path = require("path");
-const packagePath = path.resolve(".");
-const packageJson = require(path.resolve(packagePath, "package.json"));
-require("custom-env").env(packagePath);
-//export const configstore = new Configstore(`${packageJson.name}/ts-migrate`);
+
+import Configstore from "configstore";
 export const configstore = new Configstore("ts-migrate", {
     settings: {
         migrationsPath: "./src/migrations",
