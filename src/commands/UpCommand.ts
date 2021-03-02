@@ -5,11 +5,12 @@
 
 // External Modules ----------------------------------------------------------
 
+import { Connection } from "@craigmcc/ts-database";
+
 // Internal Modules ----------------------------------------------------------
 
 import AbstractModuleCommand from "./AbtractModuleCommand";
-import {Migration, MigrationData} from "../types";
-import {Connection} from "@craigmcc/ts-database";
+import { MigrationData } from "../types";
 
 // Public Objects ------------------------------------------------------------
 
@@ -34,14 +35,14 @@ class UpCommand extends AbstractModuleCommand {
             const instance = await this.loadMigration(configurationData.settings, migration);
             instances.push(instance);
         });
+//        console.info(JSON.stringify(migrations));
 
         // Acquire context object, call up() on each instance, and release context object
-/*
         const context: Connection = await this.loadContext();
-        instances.forEach(async (instance, inIndex) => {
-            const outIndex =
-                this.selectMigration(configurationData.migrations, migrations[inIndex].name);
-            await instance.up(migrations[inIndex], context);
+        instances.forEach(async (instance: any, inIndex) => {
+            const outIndex = this.selectMigration
+                (configurationData.migrations, migrations[inIndex].name);
+            await instance.up(context);
             if (outIndex >= 0) {
                 configurationData.migrations[outIndex].executed = true;
                 this.configuration = configurationData;
@@ -50,7 +51,6 @@ class UpCommand extends AbstractModuleCommand {
             }
         });
         await this.unloadContext(context);
-*/
 
     }
 
