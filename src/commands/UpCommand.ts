@@ -29,10 +29,10 @@ class UpCommand extends AbstractModuleCommand {
         // Accumulate data and load instances for pending migrations
         const migrations: MigrationData[] =
             this.findPendings(configurationData.migrations, this.name);
-        const instances: Migration[] = [];
+        const instances: Object[] = [];
         migrations.forEach(async migration => {
-            const module = await this.loadMigration(configurationData.settings, migration);
-            instances.push(module);
+            const instance = await this.loadMigration(configurationData.settings, migration);
+            instances.push(instance);
         });
 
         // Acquire context object, call up() on each instance, and release context object

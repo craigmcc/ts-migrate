@@ -103,18 +103,48 @@ abstract class AbstractModuleCommand extends AbstractMigrationCommand {
 
     /**
      * Load and return a new instance of the specified
-     * migration module.
+     * migration module.  It will be an object (either the migration object
+     * in the specified module, or an instance of that migration task) that
+     * is guaranteed to have up() and down() functions available.
      */
     protected async loadMigration
-        (settingsData: SettingsData, migrationData: MigrationData): Promise<Migration>
+        (settingsData: SettingsData, migrationData: MigrationData): Promise<Object>
     {
+
+        // Load the specified module, and extract its default object
         const migrationPath = this.toPathname(settingsData, migrationData.filename);
-        console.info(`Loading module from ${migrationPath}`);
-        const { default: migrationClass } = await import(migrationPath);
-        console.info("Loaded class:     ", migrationClass);
-        const migrationInstance = new migrationClass();
-        console.info("Loaded migration: ", migrationInstance);
-        return migrationInstance;
+        console.info(`Loading migration from '${migrationPath}'`);
+        const migrationObject = await import(migrationPath);
+        console.info(`  migrationObject:  `, migrationObject);
+        const migrationDefault = migrationObject.default;
+        console.info(`  migrationDefault: `, migrationDefault);
+
+        // If this module is a class, create a new instance
+        let migrationInstance: Object | null = null;
+        try {
+            migrationInstance = Reflect.construct(migrationDefault, []);
+            console.info(`  migrationInstance:  `, migrationInstance);
+        } catch (error) {
+            migrationInstance = null; // This is not a class
+        }
+
+        // If we got an instance, check for the required methods
+        if (migrationInstance) {
+            if (Reflect.has(migrationInstance, "up")
+                && Reflect.has(migrationInstance, "down")) {
+                return migrationInstance;
+            } else {
+                throw new Error(`Migration '${migrationData.name}' missing up() and/or down() methods`);
+            }
+        }
+
+        // Otherwise, this must be an object, so check for the required functions
+        if (migrationObject.up && migrationObject.down) {
+            return migrationObject;
+        } else {
+            throw new Error(`Migration '${migrationData.name}' missing up() and/or down() functions`);
+        }
+
     }
 
     /**

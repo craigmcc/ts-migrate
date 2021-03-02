@@ -12,11 +12,11 @@ export const JS_CLASS_TEMPLATE = (name: string): string => {
     return [
         `class ${className} {`,
         "",
-        "    async down(data, context) {",
+        "    async down(context) {",
         `        console.info("${className}.down() not yet implemented");`,
         "    }",
         "",
-        "    async up(data, context) {",
+        "    async up(context) {",
         `        console.info("${className}.up() not yet implemented");`,
         "    }",
         "",
@@ -28,11 +28,11 @@ export const JS_CLASS_TEMPLATE = (name: string): string => {
 export const JS_OBJECT_TEMPLATE = (name: string): string => {
     const objectName = toClassName(name);
     return [
-        "exports.down = async (data, context) => {",
+        "exports.down = async (context) => {",
         `        console.info("${objectName}.down() not yet implemented");`,
         "    }",
         "",
-        "exports.up = async (data, context) => {",
+        "exports.up = async (context) => {",
         `        console.info("${objectName}.up() not yet implemented");`,
         "    }",
     ].join("\n") + "\n";
@@ -43,7 +43,7 @@ export const TS_CLASS_TEMPLATE = (name: string): string => {
     const className = toClassName(name);
     return [
         "import { Connection } from \"@craigmcc/ts-database\";",
-        "import { Migration, MigrationData } from \"@craigmcc/ts-migrate\";",
+        "import { Migration } from \"@craigmcc/ts-migrate\";",
         "",
         `class ${className} extends Migration {`,
         "",
@@ -51,11 +51,11 @@ export const TS_CLASS_TEMPLATE = (name: string): string => {
         "        super();",
         "    }",
         "",
-        "    public async down(data: MigrationData, context: Connection): Promise<void> {",
+        "    public async down(context: Connection): Promise<void> {",
         `        console.info("${className}.down() not yet implemented");`,
         "    }",
         "",
-        "    public async up(data: MigrationData, context: Connection): Promise<void> {",
+        "    public async up(context: Connection): Promise<void> {",
         `        console.info("${className}.up() not yet implemented");`,
         "    }",
         "",
@@ -70,13 +70,12 @@ export const TS_OBJECT_TEMPLATE = (name: string): string => {
     const objectName = toClassName(name);
     return [
         "import { Connection } from \"@craigmcc/ts-database\";",
-        "import { MigrationData } from \"@craigmcc/ts-migrate\";",
         "",
-        "exports.down = async (data: MigrationData, context: Connection): Promise<void> => {",
+        "export const down = async (context: Connection): Promise<void> => {",
         `        console.info("${objectName}.down() not yet implemented");`,
         "    }",
         "",
-        "exports.up = async (data: MigrationData, context: Connection): Promise<void> => {",
+        "export const up = async (context: Connection): Promise<void> => {",
         `        console.info("${objectName}.up() not yet implemented");`,
         "    }",
     ].join("\n") + "\n";

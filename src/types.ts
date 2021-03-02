@@ -39,17 +39,15 @@ export abstract class Migration {
     /**
      * Gracefully undo the modifications made by the corresponding up() method.
      *
-     * @param data      Read-only copy of the descriptive data for this migration
      * @param context   Database connection to use for our modifications
      */
-    abstract down(data: MigrationData, context: Connection): Promise<void>;
+    abstract down(context: Connection): Promise<void>;
 
     /**
      * Modify the database (or other persistent state information) as required.
      *
-     * @param data      Read-only copy of the descriptive data for this migration
      * @param context   Database connection to use for our modifications
      */
-    abstract up(data: MigrationData, context: Connection): Promise<void>;
+    abstract up(context: Connection): Promise<void>;
 
 }
