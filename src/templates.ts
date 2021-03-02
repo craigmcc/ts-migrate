@@ -10,7 +10,13 @@
 export const JS_CLASS_TEMPLATE = (name: string): string => {
     const className = toClassName(name);
     return [
-        `class ${className} {`,
+        "const Migration = require(\"@craigmcc/ts-migrate\").Migration;",
+        "",
+        `class ${className} extends Migration {`,
+        "",
+        "    constructor() {",
+        "        super();",
+        "    }",
         "",
         "    async down(context) {",
         `        console.info("${className}.down() not yet implemented");`,
@@ -21,6 +27,8 @@ export const JS_CLASS_TEMPLATE = (name: string): string => {
         "    }",
         "",
         "}",
+        "",
+        `module.exports = ${className};`,
     ].join("\n") + "\n";
 }
 
@@ -28,13 +36,15 @@ export const JS_CLASS_TEMPLATE = (name: string): string => {
 export const JS_OBJECT_TEMPLATE = (name: string): string => {
     const objectName = toClassName(name);
     return [
-        "exports.down = async (context) => {",
-        `        console.info("${objectName}.down() not yet implemented");`,
-        "    }",
+        "exports.down = async (context) =>",
+        "{",
+        `    console.info("${objectName}.down() not yet implemented");`,
+        "}",
         "",
-        "exports.up = async (context) => {",
-        `        console.info("${objectName}.up() not yet implemented");`,
-        "    }",
+        "exports.up = async (context) =>",
+        "{",
+        `    console.info("${objectName}.up() not yet implemented");`,
+        "}",
     ].join("\n") + "\n";
 }
 
@@ -71,13 +81,15 @@ export const TS_OBJECT_TEMPLATE = (name: string): string => {
     return [
         "import { Connection } from \"@craigmcc/ts-database\";",
         "",
-        "export const down = async (context: Connection): Promise<void> => {",
-        `        console.info("${objectName}.down() not yet implemented");`,
-        "    }",
+        "export const down = async (context: Connection): Promise<void> =>",
+        "{",
+        `    console.info("${objectName}.down() not yet implemented");`,
+        "}",
         "",
-        "export const up = async (context: Connection): Promise<void> => {",
-        `        console.info("${objectName}.up() not yet implemented");`,
-        "    }",
+        "export const up = async (context: Connection): Promise<void> =>" +
+        "{",
+        `    console.info("${objectName}.up() not yet implemented");`,
+        "}",
     ].join("\n") + "\n";
 }
 

@@ -113,18 +113,19 @@ abstract class AbstractModuleCommand extends AbstractMigrationCommand {
 
         // Load the specified module, and extract its default object
         const migrationPath = this.toPathname(settingsData, migrationData.filename);
-        console.info(`Loading migration from '${migrationPath}'`);
+//        console.info(`Loading migration from '${migrationPath}'`);
         const migrationObject = await import(migrationPath);
-        console.info(`  migrationObject:  `, migrationObject);
+//        console.info(`  migrationObject:  `, migrationObject);
         const migrationDefault = migrationObject.default;
-        console.info(`  migrationDefault: `, migrationDefault);
+//        console.info(`  migrationDefault: `, migrationDefault);
 
         // If this module is a class, create a new instance
         let migrationInstance: Object | null = null;
         try {
             migrationInstance = Reflect.construct(migrationDefault, []);
-            console.info(`  migrationInstance:  `, migrationInstance);
+//            console.info(`  migrationInstance:  `, migrationInstance);
         } catch (error) {
+//            console.info(`  migrationInstance:  Cannot instantiate:  '${error.message}'`);
             migrationInstance = null; // This is not a class
         }
 

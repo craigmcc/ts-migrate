@@ -109,7 +109,7 @@ abstract class AbstractMigrationCommand extends AbstractCommand {
             name: name
         }
         const pathname = this.toPathname(settingsData, migrationData.filename);
-        console.info(`Writing migration '${pathname}'`);
+//        console.info(`Writing migration '${pathname}'`);
         fs.writeFileSync(pathname, text, { encoding: "utf8" });
         return migrationData;
     }

@@ -25,10 +25,10 @@ class CheckCommand extends AbstractModuleCommand {
         if (index < 0) {
             throw new Error(`name: Migration '${this.name}' does not exist`);
         }
-        console.info(`Checking migration '${this.name}'`);
+//        console.info(`Checking migration '${this.name}'`);
         const migration = await this.loadMigration
             (configurationData.settings, configurationData.migrations[index]);
-        console.info("LOADED: ", migration);
+        console.info(JSON.stringify(configurationData.migrations[index]));
     }
 
 }
