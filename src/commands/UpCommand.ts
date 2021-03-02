@@ -42,12 +42,16 @@ class UpCommand extends AbstractModuleCommand {
         instances.forEach(async (instance: any, inIndex) => {
             const outIndex = this.selectMigration
                 (configurationData.migrations, migrations[inIndex].name);
-            await instance.up(context);
+            try {
+                await instance.up(context);
+            } catch (error) {
+                throw new Error(`up: Migration '${migrations[inIndex].name}' error: '${error.message}'`);
+            }
             if (outIndex >= 0) {
                 configurationData.migrations[outIndex].executed = true;
                 this.configuration = configurationData;
             } else {
-                throw new Error(`name: Cannot mark migration '${migrations[inIndex].name}' as executed`);
+                throw new Error(`up: Cannot mark migration '${migrations[inIndex].name}' as executed`);
             }
         });
         await this.unloadContext(context);

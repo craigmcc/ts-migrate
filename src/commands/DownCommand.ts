@@ -42,12 +42,16 @@ class DownCommand extends AbstractModuleCommand {
         instances.forEach(async (instance: any, inIndex) => {
             const outIndex = this.selectMigration
             (configurationData.migrations, migrations[inIndex].name);
-            await instance.down(context);
+            try {
+                await instance.down(context);
+            } catch (error) {
+                throw new Error(`down: Migration '${migrations[inIndex].name}' error: '${error.message}'`);
+            }
             if (outIndex >= 0) {
                 configurationData.migrations[outIndex].executed = false;
                 this.configuration = configurationData;
             } else {
-                throw new Error(`name: Cannot mark migration '${migrations[inIndex].name}' as pending`);
+                throw new Error(`down: Cannot mark migration '${migrations[inIndex].name}' as pending`);
             }
         });
         await this.unloadContext(context);
