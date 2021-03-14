@@ -24,7 +24,7 @@ abstract class AbstractModuleCommand extends AbstractMigrationCommand {
         super();
     }
 
-    context: Connection | null = null;
+    protected context: Connection | null = null;
 
     /**
      * Find and return MigrationData for all executed migrations from the
@@ -91,14 +91,21 @@ abstract class AbstractModuleCommand extends AbstractMigrationCommand {
     }
 
     /**
-     * Load and return the Context object for these migration modules.
+     * Load the Context object for these migration modules.
      * The connect() method will have already been called.
      * TODO: Genericize object type?
      */
-    protected async loadContext(): Promise<Connection> {
+    protected async loadContext(): Promise<void> {
+        console.info("LOAD: Before connection() uri=", CONNECTION_URI);
         this.context = await connection(CONNECTION_URI);
-        await this.context.connect();
-        return this.context;
+        console.info("LOAD: Before connect() connected=", this.context.connected);
+        try {
+            await this.context.connect();
+            console.info("LOAD: After connect() connected=", this.context.connected);
+        } catch (error) {
+            console.info("LOAD: connect() error", error);
+            throw error;
+        }
     }
 
     /**
@@ -152,8 +159,18 @@ abstract class AbstractModuleCommand extends AbstractMigrationCommand {
      * Perform whatever shutdown operations are required on the
      * context object loaded via loadContext().
      */
-    protected async unloadContext(context: Connection): Promise<void> {
-        context.disconnect();
+    protected async unloadContext(): Promise<void> {
+        console.info("UNLOAD: Before disconnect()");
+        try {
+            if (this.context) {
+                await this.context.disconnect();
+                this.context = null;
+            }
+            console.info("UNLOAD: After disconnect()");
+        } catch (error) {
+            console.info("UNLOAD: disconnect() error", error);
+            throw error;
+        }
     }
 
 }

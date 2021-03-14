@@ -71,7 +71,13 @@ yargs(hideBin(process.argv))
         command: "down <name>",
         describe: "Execute down() on executed migrations down to, and including, the specified one",
         handler: async (argv: any) => {
-            await (new DownCommand(argv)).execute();
+            try {
+                console.info(`down ${argv.name}: Before execute()`);
+                await (new DownCommand(argv)).execute();
+                console.info(`down ${argv.name}: After execute()`);
+            } catch (error) {
+                console.info(`down ${argv.name}: error`, error);
+            }
         }
     })
     .command({
@@ -113,7 +119,13 @@ yargs(hideBin(process.argv))
         command: "up <name>",
         describe: "Execute up() on pending migrations up to, and including, the specified one",
         handler: async (argv: any) => {
-            await (new UpCommand(argv)).execute();
+            try {
+                console.info(`up ${argv.name}: Before execute()`);
+                await (new UpCommand(argv)).execute();
+                console.info(`up ${argv.name}: After execute()`);
+            } catch (error) {
+                console.info(`up ${argv.name} error:`, error);
+            }
         }
     })
     .demandCommand()
