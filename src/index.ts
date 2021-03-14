@@ -73,7 +73,8 @@ yargs(hideBin(process.argv))
         handler: async (argv: any) => {
             try {
                 console.info(`down ${argv.name}: Before execute()`);
-                await (new DownCommand(argv)).execute();
+                const command = new DownCommand(argv);
+                await command.execute();
                 console.info(`down ${argv.name}: After execute()`);
             } catch (error) {
                 console.info(`down ${argv.name}: error`, error);
@@ -121,7 +122,8 @@ yargs(hideBin(process.argv))
         handler: async (argv: any) => {
             try {
                 console.info(`up ${argv.name}: Before execute()`);
-                await (new UpCommand(argv)).execute();
+                const command = new UpCommand(argv);
+                await command.execute();
                 console.info(`up ${argv.name}: After execute()`);
             } catch (error) {
                 console.info(`up ${argv.name} error:`, error);
